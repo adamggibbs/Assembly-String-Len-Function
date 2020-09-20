@@ -33,14 +33,29 @@ main:                                 ; Called by the C library stub code.
         mov     rsi, greetings 	; rsi gets the address of the string below.
         syscall	                ; Call kernel, triggering the write.  The registers carry the arguments.
 
+	;; Print a second message to ensure that the \newline char is properly printed
+	mov 	rdi, greetings2	; move greetings2 into first arg register (rdi)
+	sub 	rsp, 8		; pad the stack as we did above
+	call 	string_length	; call the function string_length
+	add 	rsp,8		; un pad
+
+	mov 	rdx, rax	; follow same process as above, but to print greetings2 this time 
+	mov 	rax, 1
+	mov 	rdi, 1
+	mov 	rsi, greetings2
+	syscall
+	
 	ret		   	; End of main().  Stub code will exit the process.
 ;;; ----------------------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------------------
-        section   .data		         ; The start of the data portion of the program.
+        section   .data		         			; The start of the data portion of the program.
 
-greetings:			         ; Labels the string of bytes to be written.
-	db        "Hello, World!", 10, 0 ; The message, with the byte values for "newline"
-                        		 ; and the null terminator appended.
+greetings:			         			; Labels the string of bytes to be written.
+	db        "Hello, World!", 10, "~Next Line~", 10, 0 	; The message, with the byte values for "newline"
+                        					; and the null terminator appended.
+
+greetings2:				 			; Another string to test program
+	db	  "Hello again, World!",10,0
 
 ;;; ----------------------------------------------------------------------------------------
