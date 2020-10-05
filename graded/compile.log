@@ -1,0 +1,4 @@
+rm -rf *.o exp neo-hello
+nasm -felf64 -gdwarf neo-hello.asm
+nasm -felf64 -gdwarf string-length.asm
+gcc -no-pie -o neo-hello neo-hello.o string-length.o
